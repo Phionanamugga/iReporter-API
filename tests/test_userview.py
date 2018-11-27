@@ -20,8 +20,8 @@ class Test_record_views(unittest.TestCase):
         response = self.client.post('api/v1/users',
                                     json=user_details)
         msg = json.loads(response.data)
-        self.assertEqual(response.status_code, 201) 
-       
+        self.assertEqual(response.status_code, 201)
+
     def test_fetch_all_users(self):
         # Tests that the end point fetches all users
         response = self.client.get('/api/v1/users',
@@ -46,7 +46,7 @@ class Test_record_views(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_delete_user_details(self):
-        # Tests that the end point enables user delete account 
+        # Tests that the end point enables user delete account
         user_details = {
                         "firstname": "emily",
                         "lastname": "mirembe",
@@ -64,4 +64,4 @@ class Test_record_views(unittest.TestCase):
                                       json=new_details)
         msg = json.loads(response.data)
         self.assertIn("successfully deleted", msg['message'])
-        self.assertEqual(response.status_code, 200)                        
+        self.assertEqual(response.status_code, 200)
