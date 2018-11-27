@@ -10,3 +10,9 @@ Corruption is a huge bane to Africa’s development. African countries must deve
 6. Users can add geolocation (Lat Long Coordinates) to their ​ red-flag ​ or ​ intervention records​ .
 7. Users can change the geolocation (Lat Long Coordinates) attached to their ​ red-flag ​ or intervention ​ records​ .
 8. Admin can change the ​ status​​ of a record to either ​ under investigation, rejected ​ (in the event of a false claim)​ ​ or​ resolved ( ​ in the event that the claim has been investigated and resolved)​
+
+### Running Tests
+- Install nosetests
+- Navigate to project root
+- Use `nosetests tests/` to run the tests
+- To run the tests with coverage, use `nosetests --with-coverage --cover-package=api && coverage report`
