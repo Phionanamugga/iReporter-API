@@ -5,6 +5,7 @@ app = Flask(__name__)
 
 records = []
 
+
 @app.route('/api/v1/records', methods=['POST'])
 def create_record():
     # Creates a new record
@@ -36,7 +37,7 @@ def fetch_single_record(record_id):
 
 @app.route('/api/v1/records/<int:record_id>', methods=['PUT'])
 def edit_record(record_id):
-    # this class enables user modified their records before admin changes its status
+    # function for editing a record
     if record_id == 0 or record_id > len(records):
         return jsonify({"message": "Index is out of range"}), 400
     data = request.get_json()
@@ -49,13 +50,13 @@ def edit_record(record_id):
             record.status = data['status']
             record.images = data['images']
             record.videos = data['videos']
-            record.created_by = data['created_by']          
+            record.created_by = data['created_by']
     return jsonify({'message': "successfully edited"}), 200
 
 
 @app.route('/api/v1/records/<int:record_id>', methods=['DELETE'])
 def delete_record(record_id):
-    # this function enables user delete record 
+    # this function enables user delete record
     if record_id == 0 or record_id > len(records):
         return jsonify({"message": "Index out of range"}), 400
     for record in records:
@@ -73,10 +74,11 @@ def register_user():
     user_id = len(users)+1
     registered_on = datetime.now()
     user = User(user_id, data['firstname'], data['lastname'],
-                data['othernames'],data['email'], data['phonenumber'],
+                data['othernames'], data['email'], data['phonenumber'],
                 data['username'], registered_on)
     users.append(user)
     return jsonify({"message": " account has been successfully created"}), 201
+
 
 @app.route('/api/v1/users', methods=['GET'])
 def fetch_users():
@@ -86,7 +88,7 @@ def fetch_users():
 
 
 @app.route('/api/v1/users/<int:user_id>', methods=['GET'])
-#this fetches a single user account
+# this fetches a single user account
 def fetch_single_user_details(user_id):
     fetched_user = []
     user = users[user_id - 1]
@@ -103,10 +105,3 @@ def delete_user(user_id):
         if user.user_id == user_id:
             users.remove(user)
     return jsonify({"message": "account successfully deleted"}), 200
-
-
-
-
-   
-
-    

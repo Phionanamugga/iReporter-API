@@ -17,7 +17,7 @@ class Test_record_views(unittest.TestCase):
         # Tests that the end point returns a single record
         record_details = {
                     "title": "Corruption at its tipsefdthryt",
-                    "description": "corruption in court in bvcb road day light",
+                    "description": "corruption in court in broad day light",
                     "status": "accepted",
                     "location": "nansana",
                     "record_type": "redflag",
@@ -34,7 +34,8 @@ class Test_record_views(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_edit_record(self):
-        # Tests that the end point enables user edit their already created record before status is changed by admin
+        # Tests that the end point enables user edit their already
+        # created record before status is changed by admin
         record_details = {
             "comments": "mutebiedfvfdhrtjuk",
             "created_by": "corruption in court in broad day light",
@@ -53,7 +54,7 @@ class Test_record_views(unittest.TestCase):
                                     json=record_details)
         new_details = {
                     "title": "Corruption at its tipsefdthryt",
-                    "description": "corruption in court in bvcb road day light",
+                    "description": "corruption in court in broad day light",
                     "status": "accepted",
                     "location": "mukono",
                     "record_type": "intervention",
@@ -69,7 +70,8 @@ class Test_record_views(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_delete_record(self):
-        # Tests that the end point enables user edit their already created record when rejected by admin
+        # Tests that the end point enables user edit their already created
+        # record when rejected by admin
         record_details = {
             "comments": "mutebiedfvfdhrtjuk",
             "created_by": "corruption in court in broad day light",
@@ -93,5 +95,3 @@ class Test_record_views(unittest.TestCase):
         msg = json.loads(response.data)
         self.assertIn("successfully deleted", msg['message'])
         self.assertEqual(response.status_code, 200)
-
-        
