@@ -33,12 +33,13 @@ class Record:
 class User:
     # this class defines the details of a user
     def __init__(self, user_id, firstname, lastname, othernames, email,
-                 phonenumber, username, registered_on):
+                 phonenumber, username, registered_on, password):
         self.user_id = user_id
         self.firstname = firstname
         self.lastname = lastname
         self. othernames = othernames
         self. email = email
+        self.password = password
         self.phonenumber = phonenumber
         self.username = username
         self. registered_on = registered_on
@@ -54,4 +55,5 @@ class User:
             "phonenumber": self.phonenumber,
             "username": self.username,
             "registered_on": self.registered_on,
+            "password": self.password
         }
