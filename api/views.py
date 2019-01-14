@@ -1,9 +1,17 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
 from api.models import Record, User
 from datetime import datetime
+from werkzeug.exceptions import HTTPException
+import re
+
 app = Flask(__name__)
 
 records = []
+
+name_regex = r"[a-zA-Z]"
+password_regex = r"(?=.*[0-9])"
+username_regex = r"[a-zA-Z0-9_]"
+phone_regex = r"\d{3}-\d{3}-\d{4}"
 
 
 @app.route('/api/v1/records', methods=['POST'])
@@ -73,11 +81,50 @@ def register_user():
     data = request.get_json()
     user_id = len(users)+1
     registered_on = datetime.now()
+    username = data['username']
+    user_fields = ['othernames', 'firstname', 'lastname']
+    for name in user_fields:
+        if not re.match(name_regex, data[name]):
+            return jsonify({'message': 'Enter correct ' + name + ' format'}), 400
+    if not username or username.isspace():
+        return jsonify({'message': 'Username can not be empty.'}), 400
+    if not data['email'] or data['email'].isspace():
+        return jsonify({'message': 'Email field can not be empty.'}), 400
+    if not re.match(r"[^@.]+@[A-Za-z]+\.[a-z]+", data['email']):
+        return jsonify({'message': 'Enter a valid email address.'}), 400
+    if not re.match(username_regex, data['username']):
+        return jsonify({'message': 'Enter a valid username'}), 400
+    if not data['password'] or data['password'].isspace():
+        return jsonify({'message': 'Password can not be left empty.'}), 400
+    if not re.match(phone_regex, data['phonenumber']):
+        return jsonify({'message': 'Enter phone format 123-456-7890'}), 400
+    if len(data['password']) < 8:
+        return jsonify({'message': 'Password must be atleast 8 characters'}), 400   
     user = User(user_id, data['firstname'], data['lastname'],
                 data['othernames'], data['email'], data['phonenumber'],
-                data['username'], registered_on)
+                username, registered_on, data['password'])
     users.append(user)
     return jsonify({"message": " account has been successfully created"}), 201
+
+
+@app.route('/api/v1/users/login', methods=['POST'])
+def login():
+    # this function enables user to log in.   
+    data = request.get_json()
+    user = User(data['email'], data['password'],
+                data['username'])
+    if not email or email.isspace():
+        return jsonify({'message': 'Email field can not be empty.'}), 400
+    elif not re.match(r"[^@.]+@[A-Za-z]+\.[a-z]+", email):
+        return jsonify({'message': 'Enter a valid email address.'}), 400
+    if not username or username.isspace():
+        return jsonify({
+            'message': 'username field can not be empty.'
+        }), 400
+    if not password or password.isspace():
+        return jsonify({
+            'message': 'password field can not be empty.'
+        }), 400
 
 
 @app.route('/api/v1/users', methods=['GET'])
@@ -91,9 +138,14 @@ def fetch_users():
 # this fetches a single user account
 def fetch_single_user_details(user_id):
     fetched_user = []
-    user = users[user_id - 1]
-    fetched_user.append(user.get_user_details())
-    return jsonify({"user": fetched_user}), 200
+    try:
+        user = users[user_id - 1]
+        if user_id == 0 or user_id > len(users):
+            return jsonify({"message": "user doesnot exist"}), 404
+        fetched_user.append(user.get_user_details())
+        return jsonify({"user": fetched_user}), 200
+    except Exception:
+        return jsonify({"message": "User not found"}), 404
 
 
 @app.route('/api/v1/users/<int:user_id>', methods=['DELETE'])

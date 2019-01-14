@@ -13,14 +13,16 @@ class Test_record_views(unittest.TestCase):
                         "firstname": "emily",
                         "lastname": "mirembe",
                         "othernames": "princess",
-                        "email": "email@",
-                        "phonenumber": "phonenumber",
-                        "username": "username"
+                        "email": "email@gmail.com",
+                        "phonenumber": "123-456-7890",
+                        "username": "username",
+                        "password": "12345678"
                         }
         response = self.client.post('api/v1/users',
                                     json=user_details)
         msg = json.loads(response.data)
         self.assertEqual(response.status_code, 201)
+        self.assertIn("account has been successfully created", msg['message'])
 
     def test_fetch_all_users(self):
         # Tests that the end point fetches all users
@@ -34,9 +36,10 @@ class Test_record_views(unittest.TestCase):
                             "firstname": "emily",
                             "lastname": "mirembe",
                             "othernames": "princess",
-                            "email": "email@",
-                            "phonenumber": "phonenumber",
-                            "username": "username"
+                            "email": "email@gmail.com",
+                            "phonenumber": "123-456-7890",
+                            "username": "username",
+                            "password": "134546m4mmfr"
                             }
         self.client.post('api/v1/users',
                          json=user_details)
@@ -51,9 +54,10 @@ class Test_record_views(unittest.TestCase):
                         "firstname": "emily",
                         "lastname": "mirembe",
                         "othernames": "princess",
-                        "email": "email@",
-                        "phonenumber": "phonenumber",
-                        "username": "username"
+                        "email": "email@gmail.com",
+                        "phonenumber": "123-456-7890",
+                        "username": "username",
+                        "password": "1234567hff"
             }
         response = self.client.post('api/v1/users',
                                     content_type='application/json',
