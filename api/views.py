@@ -74,6 +74,7 @@ def delete_record(record_id):
 
 users = []
 
+
 @user.route('/api/v1/users', methods=['POST'])
 def register_user():
     # registers a  new user
@@ -82,19 +83,19 @@ def register_user():
     registered_on = datetime.now()
     username = data['username']
     user_fields = ['othernames', 'firstname', 'lastname']
+    key_fields = ['email', 'password']
     for name in user_fields:
         if not re.match(name_regex, data[name]):
-            return jsonify({'message': 'Enter correct ' + name + ' format'}), 400
+            return jsonify({'message': 'Enter correct ' + name + ' format'}), 400 
+    for key in key_fields:
+        if not data[key] or data[key].isspace():
+            return jsonify({'message': key + ' field can not be empty.'}), 400   
     if not username or username.isspace():
-        return jsonify({'message': 'Username can not be empty.'}), 400
-    if not data['email'] or data['email'].isspace():
-        return jsonify({'message': 'Email field can not be empty.'}), 400
+        return jsonify({'message': 'Username can not be empty.'}), 400 
     if not re.match(r"[^@.]+@[A-Za-z]+\.[a-z]+", data['email']):
         return jsonify({'message': 'Enter a valid email address.'}), 400
     if not re.match(username_regex, data['username']):
         return jsonify({'message': 'Enter a valid username'}), 400
-    if not data['password'] or data['password'].isspace():
-        return jsonify({'message': 'Password can not be left empty.'}), 400
     if not re.match(phone_regex, data['phonenumber']):
         return jsonify({'message': 'Enter phone format 123-456-7890'}), 400
     if len(data['password']) < 8:
