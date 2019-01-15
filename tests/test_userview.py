@@ -1,9 +1,9 @@
 import unittest
 import json
-from api.views import app
+from api import app
 
 
-class Test_record_views(unittest.TestCase):
+class Test_user_views(unittest.TestCase):
     def setUp(self):
         self.client = app.test_client()
 

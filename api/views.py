@@ -1,19 +1,20 @@
-from flask import Flask, jsonify, request, abort
-from api.models import Record, User
+from flask import jsonify, request, abort, Blueprint
+from .models import Record, User
 from datetime import datetime
 import re
 
-app = Flask(__name__)
-
+record = Blueprint('record', __name__)
+user = Blueprint('user', __name__)
 records = []
 
 name_regex = r"[a-zA-Z]"
 password_regex = r"(?=.*[0-9])"
 username_regex = r"[a-zA-Z0-9_]"
 phone_regex = r"\d{3}-\d{3}-\d{4}"
+record = Blueprint('record', __name__)
 
 
-@app.route('/api/v1/records', methods=['POST'])
+@record.route('/api/v1/records', methods=['POST'])
 def create_record():
     # Creates a new record
     data = request.get_json()
@@ -27,15 +28,14 @@ def create_record():
     return jsonify({"message": " Successfully created"}), 201
 
 
-@app.route('/api/v1/records', methods=['GET'])
+@record.route('/api/v1/records', methods=['GET'])
 def fetch_record():
     # fetches all user's records
-    record = Record()
-    fetch_records = record.fetch_record()
+    Records = [record.get_record() for record in records]
     return jsonify({"records": Records}), 200
 
 
-@app.route('/api/v1/records/<int:record_id>', methods=['GET'])
+@record.route('/api/v1/records/<int:record_id>', methods=['GET'])
 def fetch_single_record(record_id):
     fetched_record = []
     record = records[record_id - 1]
@@ -43,7 +43,7 @@ def fetch_single_record(record_id):
     return jsonify({"record": fetched_record}), 200
 
 
-@app.route('/api/v1/records/<int:record_id>', methods=['PUT'])
+@record.route('/api/v1/records/<int:record_id>', methods=['PUT'])
 def edit_record(record_id):
     # function for editing a record
     if not record_id:
@@ -62,10 +62,10 @@ def edit_record(record_id):
     return jsonify({'message': "successfully edited"}), 200
 
 
-@app.route('/api/v1/records/<int:record_id>', methods=['DELETE'])
+@record.route('/api/v1/records/<int:record_id>', methods=['DELETE'])
 def delete_record(record_id):
     # this function enables user delete record
-    if record_id == 0 or record.check_id(record_id):
+    if record_id == 0 or record_id > len(records):
         return jsonify({"message": "Index is out of range"}), 400
     for record in records:
         if record.record_id == record_id:
@@ -74,8 +74,7 @@ def delete_record(record_id):
 
 users = []
 
-
-@app.route('/api/v1/users', methods=['POST'])
+@user.route('/api/v1/users', methods=['POST'])
 def register_user():
     # registers a  new user
     data = request.get_json()
@@ -107,7 +106,7 @@ def register_user():
     return jsonify({"message": " account has been successfully created"}), 201
 
 
-@app.route('/api/v1/users/login', methods=['POST'])
+@user.route('/api/v1/users/login', methods=['POST'])
 def login():
     # this function enables user to log in.   
     data = request.get_json()
@@ -127,14 +126,14 @@ def login():
         }), 400
 
 
-@app.route('/api/v1/users', methods=['GET'])
+@user.route('/api/v1/users', methods=['GET'])
 def fetch_users():
     # fetches all user's records
     user = [user.get_user_details() for user in users]
     return jsonify({"users": user})
 
 
-@app.route('/api/v1/users/<int:user_id>', methods=['GET'])
+@user.route('/api/v1/users/<int:user_id>', methods=['GET'])
 # this fetches a single user account
 def fetch_single_user_details(user_id):
     fetched_user = []
@@ -148,7 +147,7 @@ def fetch_single_user_details(user_id):
         return jsonify({"message": "User not found"}), 404
 
 
-@app.route('/api/v1/users/<int:user_id>', methods=['DELETE'])
+@user.route('/api/v1/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     # this function enables user to delete his/her account
     if user_id == 0 or user_id > len(users):
