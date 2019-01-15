@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, request, abort
 from api.models import Record, User
 from datetime import datetime
-from werkzeug.exceptions import HTTPException
 import re
 
 app = Flask(__name__)
@@ -31,8 +30,9 @@ def create_record():
 @app.route('/api/v1/records', methods=['GET'])
 def fetch_record():
     # fetches all user's records
-    Records = [record.get_record() for record in records]
-    return jsonify({"records": Records})
+    record = Record()
+    fetch_records = record.fetch_record()
+    return jsonify({"records": Records}), 200
 
 
 @app.route('/api/v1/records/<int:record_id>', methods=['GET'])
@@ -46,8 +46,8 @@ def fetch_single_record(record_id):
 @app.route('/api/v1/records/<int:record_id>', methods=['PUT'])
 def edit_record(record_id):
     # function for editing a record
-    if record_id == 0 or record_id > len(records):
-        return jsonify({"message": "Index is out of range"}), 400
+    if not record_id:
+        return jsonify({"message": "Invalid record_id"}), 400
     data = request.get_json()
     for record in records:
         if int(record.record_id) == int(record_id):
@@ -65,8 +65,8 @@ def edit_record(record_id):
 @app.route('/api/v1/records/<int:record_id>', methods=['DELETE'])
 def delete_record(record_id):
     # this function enables user delete record
-    if record_id == 0 or record_id > len(records):
-        return jsonify({"message": "Index out of range"}), 400
+    if record_id == 0 or record.check_id(record_id):
+        return jsonify({"message": "Index is out of range"}), 400
     for record in records:
         if record.record_id == record_id:
             records.remove(record)
