@@ -146,5 +146,5 @@ def login():
     login_details = ['email', 'password', 'username']
     for details in login_details:
         if login_details not in users:
-            return jsonify({'message': 'First sign up to use iReporter.'}), 400
+            return jsonify({'message': 'First sign up inorder to login in.'}), 404
 

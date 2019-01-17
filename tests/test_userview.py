@@ -85,5 +85,5 @@ class Test_user_login_views(unittest.TestCase):
         response = self.client.post('api/v1/users/login',
                                     json=login_details)
         msg = json.loads(response.data)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 404)
 
