@@ -106,7 +106,6 @@ def register_user():
     users.append(user)
     return jsonify({"message": " account has been successfully created"}), 201
 
-
 @user.route('/api/v1/users', methods=['GET'])
 def fetch_users():
     # fetches all user's records
@@ -126,17 +125,6 @@ def fetch_single_user_details(user_id):
         return jsonify({"user": fetched_user}), 200
     except Exception:
         return jsonify({"message": "User not found"}), 404
-
-
-@user.route('/api/v1/users/<int:user_id>', methods=['DELETE'])
-def delete_user(user_id):
-    # this function enables user to delete his/her account
-    if user_id == 0 or user_id > len(users):
-        return jsonify({"message": "Index out of range"}), 400
-    for user in users:
-        if user.user_id == user_id:
-            users.remove(user)
-    return jsonify({"message": "account successfully deleted"}), 200
 
 
 @user.route('/api/v1/users/login', methods=['POST'])
