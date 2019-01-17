@@ -107,26 +107,6 @@ def register_user():
     return jsonify({"message": " account has been successfully created"}), 201
 
 
-@user.route('/api/v1/users/login', methods=['POST'])
-def login():
-    # this function enables user to log in.   
-    data = request.get_json()
-    user = User(data['email'], data['password'],
-                data['username'])
-    if not email or email.isspace():
-        return jsonify({'message': 'Email field can not be empty.'}), 400
-    elif not re.match(r"[^@.]+@[A-Za-z]+\.[a-z]+", email):
-        return jsonify({'message': 'Enter a valid email address.'}), 400
-    if not username or username.isspace():
-        return jsonify({
-            'message': 'username field can not be empty.'
-        }), 400
-    if not password or password.isspace():
-        return jsonify({
-            'message': 'password field can not be empty.'
-        }), 400
-
-
 @user.route('/api/v1/users', methods=['GET'])
 def fetch_users():
     # fetches all user's records
@@ -157,3 +137,14 @@ def delete_user(user_id):
         if user.user_id == user_id:
             users.remove(user)
     return jsonify({"message": "account successfully deleted"}), 200
+
+
+@user.route('/api/v1/users/login', methods=['POST'])
+def login():
+    # this function enables user to log in.   
+    data = request.get_json()
+    login_details = ['email', 'password', 'username']
+    for details in login_details:
+        if login_details not in users:
+            return jsonify({'message': 'First sign up to use iReporter.'}), 400
+

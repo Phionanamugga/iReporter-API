@@ -69,3 +69,21 @@ class Test_user_views(unittest.TestCase):
         msg = json.loads(response.data)
         self.assertIn("successfully deleted", msg['message'])
         self.assertEqual(response.status_code, 200)
+
+
+class Test_user_login_views(unittest.TestCase):
+    def setUp(self):
+        self.client = app.test_client()
+
+    def test_user_login(self):
+        # Tests that the end point enables a user_login
+        login_details = {
+                        "email": "email@gmail.com",
+                        "username": "username",
+                        "password": "12345678"
+                        }
+        response = self.client.post('api/v1/users/login',
+                                    json=login_details)
+        msg = json.loads(response.data)
+        self.assertEqual(response.status_code, 400)
+
