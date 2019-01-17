@@ -57,3 +57,4 @@ class User:
             "registered_on": self.registered_on,
             "password": self.password
         }
+
