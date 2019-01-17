@@ -119,7 +119,7 @@ def fetch_single_user_details(user_id):
     fetched_user = []
     try:
         user = users[user_id - 1]
-        if user_id == 0 or user_id > len(users):
+        if user not in users:
             return jsonify({"message": "user doesnot exist"}), 404
         fetched_user.append(user.get_user_details())
         return jsonify({"user": fetched_user}), 200
