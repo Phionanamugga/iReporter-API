@@ -136,3 +136,10 @@ def login():
         if login_details not in users:
             return jsonify({'message': 'First sign up inorder to login in.'}), 404
 
+
+@user.route('/api/v1/users/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    # this function enables user to delete his/her account
+    if user_id in users == user_id:
+            users.remove(user)
+    return jsonify({"message": "account successfully deleted"}), 200
