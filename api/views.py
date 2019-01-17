@@ -86,7 +86,7 @@ def register_user():
     key_fields = ['email', 'password']
     for name in user_fields:
         if not re.match(name_regex, data[name]):
-            return jsonify({'message': 'Enter correct ' + name + ' format'}), 400 
+            return jsonify({'message': 'Enter correct ' + name + ' format'}), 400
     for key in key_fields:
         if not data[key] or data[key].isspace():
             return jsonify({'message': key + ' field can not be empty.'}), 400   
@@ -105,6 +105,7 @@ def register_user():
                 username, registered_on, data['password'])
     users.append(user)
     return jsonify({"message": " account has been successfully created"}), 201
+
 
 @user.route('/api/v1/users', methods=['GET'])
 def fetch_users():
@@ -129,11 +130,11 @@ def fetch_single_user_details(user_id):
 
 @user.route('/api/v1/users/login', methods=['POST'])
 def login():
-    # this function enables user to log in.   
+    # this function enables user to log in  
     data = request.get_json()
     login_details = ['email', 'password', 'username']
-    for details in login_details:
-        if login_details not in users:
+    for detail in login_details:
+        if data[detail] not in users:
             return jsonify({'message': 'First sign up inorder to login in.'}), 404
 
 

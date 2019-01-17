@@ -79,4 +79,3 @@ class Test_user_views(unittest.TestCase):
         msg = json.loads(response.data)
         self.assertIn("successfully deleted", msg['message'])
         self.assertEqual(response.status_code, 200)
-
