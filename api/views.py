@@ -14,6 +14,7 @@ phone_regex = r"\d{3}-\d{3}-\d{4}"
 record = Blueprint('record', __name__)
 
 
+
 @record.route('/api/v1/records', methods=['POST'])
 def create_record():
     # Creates a new record
@@ -82,11 +83,16 @@ def register_user():
     user_id = len(users)+1
     registered_on = datetime.now()
     username = data['username']
+    text_fields = ['othernames', 'firstname', 'lastname', 'username']
     user_fields = ['othernames', 'firstname', 'lastname']
     key_fields = ['email', 'password']
     for name in user_fields:
         if not re.match(name_regex, data[name]):
             return jsonify({'message': 'Enter correct ' + name + ' format'}), 400
+    for text_field in text_fields:
+        if len(data[text_field]) > 10:
+            return jsonify({'message': text_field + ' too long'}), 404
+        
     for key in key_fields:
         if not data[key] or data[key].isspace():
             return jsonify({'message': key + ' field can not be empty.'}), 400   
@@ -99,7 +105,7 @@ def register_user():
     if not re.match(phone_regex, data['phonenumber']):
         return jsonify({'message': 'Enter phone format 123-456-7890'}), 400
     if len(data['password']) < 8:
-        return jsonify({'message': 'Password must be atleast 8 characters'}), 400   
+        return jsonify({'message': 'Password must be atleast 8 characters'}), 400  
     user = User(user_id, data['firstname'], data['lastname'],
                 data['othernames'], data['email'], data['phonenumber'],
                 username, registered_on, data['password'])
@@ -132,10 +138,17 @@ def fetch_single_user_details(user_id):
 def login():
     # this function enables user to log in  
     data = request.get_json()
-    login_details = ['email', 'password', 'username']
-    for detail in login_details:
-        if data[detail] not in users:
-            return jsonify({'message': 'First sign up inorder to login in.'}), 404
+    email = data.get('email')
+    #login_details = ['email', 'password', 'username']
+    #for detail in login_details:
+    for user in users:
+        if user.email == email:
+            return jsonify({'message': user.get_user_details()}), 200
+    return jsonify({'message': 'user not found in list'}), 404
+
+        #if data.get(detail) in users:
+            #return jsonify({'message': 'Logged in.'}), 201
+              
 
 
 @user.route('/api/v1/users/<int:user_id>', methods=['DELETE'])

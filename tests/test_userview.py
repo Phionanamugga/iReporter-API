@@ -38,7 +38,7 @@ class Test_user_views(unittest.TestCase):
         response = self.client.post('api/v1/users/login',
                                     json=login_details)
         msg = json.loads(response.data)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
 
     def test_fetch_single_user_details(self):
         # Tests that the end point returns a single user's details
