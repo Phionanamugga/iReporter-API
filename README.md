@@ -24,5 +24,5 @@ Corruption is a huge bane to Africa’s development. African countries must deve
 - Use `nosetests tests/` to run the tests
 - To run the tests with coverage, use `nosetests --with-coverage --cover-package=api && coverage report`
 -Use `pytest test_userview.py`to test the user views
--Use `pytest test_recordviews.py` to test record views
+-Use `pytest test_recordviews.py` to test record views.
 - To run the tests with coverage, use `nosetests --with-coverage --cover-package=api && coverage report`
